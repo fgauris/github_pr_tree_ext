@@ -75,12 +75,28 @@ const isDeletedForFileId = (fileId) => {
   return hiddenDiffReason && (hiddenDiffReason.innerText.includes('file was deleted'))
 }
 
-const filterItem = (item, filter) => {
-  if (filter === null || filter.trim() === EMPTY_FILTER) {
-    return true
+const filterItem = (item, filter, showTestFiles, showCsprojFiles, showConfigFiles) => {
+  if (filter === null) {
+    filter = EMPTY_FILTER
   }
+  let usePositive = filter[0] !== '!' || filter.length <= 1;
+  let result = item 
+    &&  (
+          (filter === null || filter.trim() === EMPTY_FILTER) 
+            || (usePositive ? containsString(item, filter) : !containsString(item, filter.substring(1)))
+        )
+    && (showTestFiles || (!showTestFiles && !containsStringCaseSensitive(item, 'Test') ))
+    && (showCsprojFiles || (!showCsprojFiles && !item.toLowerCase().endsWith('.csproj') ))
+    && (showConfigFiles || (!showConfigFiles && !item.toLowerCase().endsWith('.config') ))
+    return result
+}
 
-  return item && item.toLowerCase().indexOf(filter.toLowerCase()) > -1
+const containsString = (item, filter) => {
+  return item.toLowerCase().indexOf(filter.toLowerCase()) > -1
+}
+
+const containsStringCaseSensitive = (item, filter) => {
+  return item.indexOf(filter) > -1
 }
 
 const getCurrentFileLocation = (title) => {
@@ -113,7 +129,7 @@ export const folderConcat = (node) => {
   return node
 }
 
-export const createFileTree = (filter = EMPTY_FILTER) => {
+export const createFileTree = (filter = EMPTY_FILTER, showTestFiles = true, showCsprojFiles = true, showConfigFiles = true) => {
   const fileInfo = [...document.querySelectorAll('.file-info > a')]
   const files = fileInfo.map(({ title, href }) => {
     title = getCurrentFileLocation(title)
@@ -128,7 +144,7 @@ export const createFileTree = (filter = EMPTY_FILTER) => {
 
   files.forEach(({ parts, href }) => {
     let location = tree
-    if (filterItem(parts[parts.length - 1], filter)) {
+    if (filterItem(parts[parts.length - 1], filter, showTestFiles, showCsprojFiles, showConfigFiles)) {
       parts.forEach((part, index) => {
         let node = location.list.find(node => node.nodeLabel === part)
         if (!node) {

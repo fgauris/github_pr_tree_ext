@@ -29,13 +29,15 @@ class Options extends React.Component {
       <div className='container'>
         <div className='text-center'>
           <h1>Better Pull Request</h1>
-          <p>
-            Thanks for using Better Pull Request {this.isChrome() ? 'Chrome' : 'Firefox'} Extension! 🎉
-          </p>
-          <p>
-            If you're enjoying this extension, please <a href={this.isChrome() ? chromeStoreUrl : firefoxStoreUrl} target='_blank'>rate it
-            on the {this.isChrome() ? 'Chrome' : 'Firefox'} Store</a>.
-          </p>
+
+          <div>
+            <h3>Additional features</h3>
+            <ol style={{textAlign:'left'}}>
+              <li>Reverse search: Type '!' and then text, for example '!foo' and all files that do NOT contain word 'foo' will be found.</li>
+              <li>Filtering out files that contain word 'Test' (case sensitive!).</li>
+              <li>Filtering out .csproj and .config files (case sensitive!).</li>
+            </ol>
+          </div>
         </div>
         <div>
           <h4>Customize</h4>

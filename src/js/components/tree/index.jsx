@@ -39,6 +39,9 @@ class Tree extends React.Component {
       show: true,
       visibleElement: null,
       filter: '',
+      showTestFiles: true,
+      showCsprojFiles: true,
+      showConfigFiles: true,
       options: {}
     }
   }
@@ -108,7 +111,8 @@ class Tree extends React.Component {
   }
 
   onClick (e) {
-    if (e.target.type === 'checkbox') {
+    let target = e.target
+    if (target.type === 'checkbox' && target.id === 'diffStats') {
       setTimeout(() => this.setState({ root: this.props.root }), 0)
     }
   }
@@ -164,17 +168,19 @@ class Tree extends React.Component {
     })
   }
 
-  filterFiles (event) {
-    const filter = event.target.value || ''
+  filterFiles (parFilter, showTestFiles, showCsprojFiles, showConfigFiles) {
+    const filter = parFilter || ''
     this.setState({
-      root: createFileTree(filter).tree,
-      filter
+      root: createFileTree(filter, showTestFiles, showCsprojFiles, showConfigFiles).tree,
+      filter: filter,
+      showTestFiles: showTestFiles,
+      showCsprojFiles: showCsprojFiles,
+      showConfigFiles: showConfigFiles
     })
   }
 
   render () {
-    const { root, filter, show, visibleElement } = this.state
-
+    const { root, filter, showTestFiles, showCsprojFiles, showConfigFiles, show, visibleElement } = this.state
     if (!show) {
       return null
     }
@@ -188,6 +194,9 @@ class Tree extends React.Component {
           onFullWidth={this.onFullWidth}
           onOptions={this.onOptions}
           onClose={this.onClose}
+          showTestFiles={showTestFiles}
+          showCsprojFiles={showCsprojFiles}
+          showConfigFiles={showConfigFiles}
         />
         <div className='file-container'>
           <div>

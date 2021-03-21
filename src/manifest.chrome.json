@@ -1,6 +1,6 @@
 {
-  "name": "Better Pull Request for GitHub",
-  "short_name": "Better PRs",
+  "name": "Better Pull Request for GitHub Ext",
+  "short_name": "Better PRs with extended functionality",
   "permissions": [
     "contextMenus",
     "storage",
